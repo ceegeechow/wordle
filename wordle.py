@@ -6,13 +6,21 @@ from random_word import RandomWords
 import re
 import sys
 
-guessMap = {1: "First", 2: "Second", 3: "Third", 4: "Fourth", 5: "Fifth", 6: "Sixth"}
-alphabet = "abcdefghijklmnopqrstuvwxyz"
+#TODO better error checking (out of bounds, etc)
 
-class GuessState(enum.Enum):
+guessMap = {1: "First", 2: "Second", 3: "Third", 4: "Fourth", 5: "Fifth", 6: "Sixth"}
+
+class alphabet:
+    letters = "abcdefghijklmnopqrstuvwxyz"
+    letterMap = {c: None for c in letters}
+
+    def updateMap(c, state):
+        letterMap[c] = state
+
+class guessState(enum.Enum):
     green = 1
     yellow = 2
-    gray = 3
+    red = 3
 
 class printColors:
     green = '\033[92m'
@@ -39,32 +47,51 @@ def getValidWord(n):
         if validateWord(s, n):
             return s
 
-def compareLetters(word, guess):
+def compareLetters(word, guess, alphabetMap):
     letters = word
     r = [None]*len(word)
+    
     for i in range(len(word)):
         if word[i] == guess[i]:
-            r[i] = GuessState.green
+            r[i] = guessState.green
             letters = letters.replace(word[i], "", 1)
+            alphabetMap[word[i]] = guessState.green
     for i, val in enumerate(r):
         if val == None:
             if guess[i] in letters:
-                r[i] = GuessState.yellow
+                r[i] = guessState.yellow
                 letters = letters.replace(guess[i], "", 1)
+                if alphabetMap[guess[i]] != guessState.green:
+                    alphabetMap[guess[i]] = guessState.yellow
             else:
-                r[i] = GuessState.gray
-    return r
+                r[i] = guessState.red
+                if alphabetMap[guess[i]] != guessState.green and alphabetMap[guess[i]] != guessState.yellow:
+                    alphabetMap[guess[i]] = guessState.red
+    return r, alphabetMap
 
-def outputResult(res, guess):
+def outputResult(res, s):
     outputString = ""
-    for i in range(len(guess)):
-        if res[i] == GuessState.green:
+    for i in range(len(s)):
+        if res[i] == guessState.green:
             outputString += printColors.green
-        elif res[i] == GuessState.yellow:
+        elif res[i] == guessState.yellow:
             outputString += printColors.yellow
         else:
             outputString += printColors.red
-        outputString += guess[i] + printColors.endc
+        outputString += s[i] + printColors.endc
+    return outputString
+
+def outputAlphabet(res):
+    outputString = ""
+    for c in "abcdefghijklmnopqrstuvwxyz":
+        if res[c] == guessState.green:
+            outputString += printColors.green + c + printColors.endc
+        elif res[c] == guessState.yellow:
+            outputString += printColors.yellow + c + printColors.endc
+        elif res[c] == guessState.red:
+            outputString += printColors.red + c + printColors.endc
+        else:
+            outputString += c
     return outputString
 
 if __name__ == "__main__":
@@ -73,6 +100,9 @@ if __name__ == "__main__":
     parser.add_argument("--length", type=int, default=5, help="number of letters in wordle", required=False)
     parser.add_argument("--maxGuesses", type=int, default=6, help="maximum number of guesses", required=False)
     args = parser.parse_args()
+
+    letters = "abcdefghijklmnopqrstuvwxyz"
+    letterMap = {c: None for c in letters}
 
     word = getValidWord(args.length)
     if word == "":
@@ -87,10 +117,11 @@ if __name__ == "__main__":
             print(guess + " is not a valid guess, try again")
             guessNum -= 1
             continue
-        res = compareLetters(word, guess)
-        sharableResults.append(res)
-        print(outputResult(res, guess))
-        # TODO: print color coded alphabet
+        guessRes, letterMap = compareLetters(word, guess, letterMap)
+        sharableResults.append(guessRes)
+        print(outputResult(guessRes, guess))
+        print(outputAlphabet(letterMap))
+
         if guess == word:
             print("Congratulations! You got the wordle in", guessNum, "guesses!")
             share = input("Would you like to share your result (y/n)?")
