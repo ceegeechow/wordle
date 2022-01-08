@@ -32,7 +32,9 @@ def generateWord(n):
     return word
 
 def validateWord(s, n):
-    if len(s) != n:
+    if s != None and len(s) != n:
+        return False
+    if not re.fullmatch('[a-z]+', s):
         return False
     d = enchant.Dict("en_US")
     return d.check(s)
@@ -41,7 +43,6 @@ def getValidWord(n):
     timeout = datetime.now() + timedelta(seconds=30)
     while datetime.now() < timeout:
         s = generateWord(n)
-        print(s)
         if validateWord(s, n):
             return s
 
@@ -109,10 +110,11 @@ if __name__ == "__main__":
     word = getValidWord(args.length)
     if word == "":
         sys.exit("error generating valid word")
-    # print(word)
+
     guessNum = 0
     sharableResults = []
     while guessNum < args.maxGuesses:
+        print(outputAlphabet(letterMap))
         guessNum += 1
         guess = input(guessMap[guessNum] + " guess: ")
         if not validateWord(guess, args.length):
@@ -122,7 +124,6 @@ if __name__ == "__main__":
         guessRes, letterMap = compareLetters(word, guess, letterMap)
         sharableResults.append(guessRes)
         print(outputResult(guessRes, guess))
-        print(outputAlphabet(letterMap))
 
         if guess == word:
             print("Congratulations! You got the wordle in", guessNum, "guesses!")
