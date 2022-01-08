@@ -6,8 +6,6 @@ from random_word import RandomWords
 import re
 import sys
 
-#TODO better error checking (out of bounds, etc)
-
 guessMap = {1: "First", 2: "Second", 3: "Third", 4: "Fourth", 5: "Fifth", 6: "Sixth"}
 
 class alphabet:
@@ -33,7 +31,7 @@ def generateWord(n):
     word = r.get_random_word(hasDictionaryDef=True, minLength=n, maxLength=n)
     return word
 
-def validateWord(s, n): #TODO
+def validateWord(s, n):
     if len(s) != n:
         return False
     d = enchant.Dict("en_US")
@@ -48,6 +46,8 @@ def getValidWord(n):
             return s
 
 def compareLetters(word, guess, alphabetMap):
+    if len(word) != len(guess):
+        sys.exit("len(word) != len(guess)")
     letters = word
     r = [None]*len(word)
     
@@ -70,6 +70,8 @@ def compareLetters(word, guess, alphabetMap):
     return r, alphabetMap
 
 def outputResult(res, s):
+    if len(res) != len(s):
+        sys.exit("len(res) != len(s)")
     outputString = ""
     for i in range(len(s)):
         if res[i] == guessState.green:
