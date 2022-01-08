@@ -1,8 +1,13 @@
+import argparse
+from datetime import datetime, timedelta
+import enchant
+import enum
 from random_word import RandomWords
 import re
-import enum
+import sys
 
 guessMap = {1: "First", 2: "Second", 3: "Third", 4: "Fourth", 5: "Fifth", 6: "Sixth"}
+alphabet = "abcdefghijklmnopqrstuvwxyz"
 
 class GuessState(enum.Enum):
     green = 1
@@ -17,19 +22,22 @@ class printColors:
 
 def generateWord(n):
     r = RandomWords()
-    word = r.get_random_word(hasDictionaryDef=True, minCorpusCount=20, minDictionaryCount=10, minLength=n, maxLength=n)
+    word = r.get_random_word(hasDictionaryDef=True, minLength=n, maxLength=n)
     return word
 
-def getValidWord(n):
-    for _ in range(5):
-        s = generateWord(n)
-        if re.fullmatch('[a-z]{5}', s):
-            return s
-
-def validateGuess(s): #TODO
-    if len(s) != 5:
+def validateWord(s, n): #TODO
+    if len(s) != n:
         return False
-    return True
+    d = enchant.Dict("en_US")
+    return d.check(s)
+
+def getValidWord(n):
+    timeout = datetime.now() + timedelta(seconds=30)
+    while datetime.now() < timeout:
+        s = generateWord(n)
+        print(s)
+        if validateWord(s, n):
+            return s
 
 def compareLetters(word, guess):
     letters = word
@@ -60,14 +68,22 @@ def outputResult(res, guess):
     return outputString
 
 if __name__ == "__main__":
-    word = getValidWord(5)
+    #TODO: add hardmode
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--length", type=int, default=5, help="number of letters in wordle", required=False)
+    parser.add_argument("--maxGuesses", type=int, default=6, help="maximum number of guesses", required=False)
+    args = parser.parse_args()
+
+    word = getValidWord(args.length)
+    if word == "":
+        sys.exit("error generating valid word")
     # print(word)
     guessNum = 0
     sharableResults = []
-    while guessNum < 6:
+    while guessNum < args.maxGuesses:
         guessNum += 1
         guess = input(guessMap[guessNum] + " guess: ")
-        if not validateGuess(guess):
+        if not validateWord(guess, args.length):
             print(guess + " is not a valid guess, try again")
             guessNum -= 1
             continue
@@ -80,6 +96,6 @@ if __name__ == "__main__":
             share = input("Would you like to share your result (y/n)?")
             if share.lower() == "y":
                 print(sharableResults) #TODO: output emojis?
-            exit(0)
+            sys.exit()
 
     print("The wordle was " + word + ". Better luck next time!")
