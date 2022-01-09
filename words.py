@@ -4,6 +4,10 @@ import enchant
 from random_word import RandomWords
 import re 
 
+class generatorTimeout(Exception):
+    pass
+
+# used by guessProcessor to print color-coded alphabet to help user with guesses
 class alphabet:
     def __init__(self):
         self.letters = "abcdefghijklmnopqrstuvwxyz"
@@ -54,3 +58,4 @@ class wordGenerator:
             s = self.randomWords.get_random_word(hasDictionaryDef=True, minLength=self.wordLength, maxLength=self.wordLength)
             if self.validator.validateWord(s, self.wordLength):
                 return s
+        raise(generatorTimeout)

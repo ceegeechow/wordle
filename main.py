@@ -1,6 +1,7 @@
 import argparse
 import sys
 import wordle
+import words
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
@@ -9,8 +10,8 @@ if __name__ == "__main__":
     parser.add_argument("--hardMode", type=bool, default=False, help="any revealed hints must be used in subsequent guesses", required=False)
     args = parser.parse_args()
 
-    w = wordle.Wordle(args.maxGuesses, args.length, args.hardMode)
-    if w.wordle == None or w.wordle == "":
-        sys.exit("error generating valid word")
-
+    try:
+        w = wordle.Wordle(args.maxGuesses, args.length, args.hardMode)
+    except words.generatorTimeout:
+        sys.exit("error generating wordle")
     w.play()

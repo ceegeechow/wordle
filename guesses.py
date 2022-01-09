@@ -1,6 +1,9 @@
 import constants
 import words
 
+class mismatchedLength(Exception):
+    pass
+
 class guessProcessor:
     def __init__(self, wordle, hardMode):
         self.alpha = words.alphabet()
@@ -8,9 +11,10 @@ class guessProcessor:
         self.results = []
         self.hardMode = hardMode # TODO: implement hard mode
 
+    # takes guess word and compares it to the wordle (target word)
     def processGuess(self, guess):
         if len(self.wordle) != len(guess):
-            sys.exit("len(word) != len(guess)")
+            raise mismatchedLength()
 
         r = [None]*len(self.wordle)
 
@@ -37,7 +41,8 @@ class guessProcessor:
 
     def outputResult(self, res, s):
         if len(res) != len(s):
-            sys.exit("len(res) != len(s)")
+            raise mismatchedLength()
+            
         outputString = ""
         for i in range(len(s)):
             if res[i] == constants.guessState.green:
