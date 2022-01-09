@@ -6,7 +6,7 @@ from random_word import RandomWords
 import re
 import sys
 
-guessMap = {1: "First", 2: "Second", 3: "Third", 4: "Fourth", 5: "Fifth", 6: "Sixth"}
+GUESS_MAP = {1: "First", 2: "Second", 3: "Third", 4: "Fourth", 5: "Fifth", 6: "Sixth"}
 
 class alphabet:
     def __init__(self):
@@ -32,27 +32,31 @@ class alphabet:
                 outputString += c
         print(outputString)
 
-def validateWord(s, n):
-    if s == None:
-        return False
-    if len(s) != n:
-        return False
-    if not re.fullmatch('[a-z]+', s):
-        return False
-    d = enchant.Dict("en_US")
-    return d.check(s)
+class wordValidator:
+    def __init__(self, language="en_US"):
+        self.d = enchant.Dict(language)
+
+    def validateWord(self, s, n):
+        if s == None:
+            return False
+        if len(s) != n:
+            return False
+        if not re.fullmatch('[a-z]+', s):
+            return False
+        return self.d.check(s)
 
 class wordGenerator:
     def __init__(self, n, t=30):
-        self.l = n
-        self.r = RandomWords()
-        self.t = t
+        self.wordLength = n
+        self.randomWords = RandomWords()
+        self.timeoutDuration = t
+        self.validator = wordValidator()
     
     def generateWord(self):
-        timeout = datetime.now() + timedelta(seconds=self.t)
+        timeout = datetime.now() + timedelta(seconds=self.timeoutDuration)
         while datetime.now() < timeout:
-            s = self.r.get_random_word(hasDictionaryDef=True, minLength=self.l, maxLength=self.l)
-            if validateWord(s, self.l):
+            s = self.randomWords.get_random_word(hasDictionaryDef=True, minLength=self.wordLength, maxLength=self.wordLength)
+            if self.validator.validateWord(s, self.wordLength):
                 return s
 
 class guessState(enum.Enum):
@@ -113,6 +117,7 @@ if __name__ == "__main__":
 
     a = alphabet()
     w = wordGenerator(args.length)
+    v = wordValidator()
 
     word = w.generateWord()
     if word == "":
@@ -122,8 +127,8 @@ if __name__ == "__main__":
     sharableResults = []
     while guessNum < args.maxGuesses:
         guessNum += 1
-        guess = input(guessMap[guessNum] + " guess: ")
-        if not validateWord(guess, args.length):
+        guess = input(GUESS_MAP[guessNum] + " guess: ")
+        if not v.validateWord(guess, args.length):
             print(guess + " is not a valid guess, try again")
             guessNum -= 1
             continue
