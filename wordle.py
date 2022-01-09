@@ -1,5 +1,6 @@
 import guesses
 import words
+import sys
 
 class Wordle:
     def __init__(self, maxGuesses, length, hardMode):
