@@ -2,11 +2,11 @@ import constants
 import words
 
 class guessProcessor:
-    def __init__(self, wordle):
+    def __init__(self, wordle, hardMode):
         self.alpha = words.alphabet()
         self.wordle = wordle
         self.results = []
-
+        self.hardMode = hardMode # TODO: implement hard mode
 
     def processGuess(self, guess):
         if len(self.wordle) != len(guess):
@@ -48,3 +48,7 @@ class guessProcessor:
                 outputString += constants.printColors.red
             outputString += s[i] + constants.printColors.endc
         print(outputString)
+
+    def shareResults(self):
+        #TODO
+        print(self.results)

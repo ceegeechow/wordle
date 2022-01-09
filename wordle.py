@@ -2,7 +2,7 @@ import guesses
 import words
 
 class Wordle:
-    def __init__(self, maxGuesses, length):
+    def __init__(self, maxGuesses, length, hardMode):
         self.guessMap = {1: "First", 2: "Second", 3: "Third", 4: "Fourth", 5: "Fifth", 6: "Sixth"}
         self.guessNum = 0
         self.maxGuesses = maxGuesses
@@ -10,7 +10,7 @@ class Wordle:
         self.validator = words.wordValidator()
         w = words.wordGenerator(self.length)
         self.wordle = w.generateWord()
-        self.processor = guesses.guessProcessor(self.wordle)
+        self.processor = guesses.guessProcessor(self.wordle, hardMode)
 
     def play(self):
         while self.guessNum < self.maxGuesses:
@@ -27,7 +27,7 @@ class Wordle:
                 print("Congratulations! You got the wordle in", self.guessNum, "guesses!")
                 share = input("Would you like to share your result (y/n)?")
                 if share.lower() == "y":
-                    print(self.processor.results) #TODO: output emojis?
+                    self.processor.shareResults()
                 return
             
             self.processor.alpha.printOutput()
