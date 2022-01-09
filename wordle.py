@@ -3,8 +3,6 @@ import words
 
 class Wordle:
     def __init__(self, maxGuesses, length, hardMode):
-        # to format input statement
-        self.guessMap = {1: "First", 2: "Second", 3: "Third", 4: "Fourth", 5: "Fifth", 6: "Sixth"}
         self.guessNum = 0 # guess that the player is on
         self.maxGuesses = maxGuesses
         self.length = length # length of the wordle
@@ -17,7 +15,7 @@ class Wordle:
         while self.guessNum < self.maxGuesses:
             self.guessNum += 1
             # get guess from input
-            guess = input(self.guessMap[self.guessNum] + " guess: ")
+            guess = input("Guess #" + str(self.guessNum) + ": ")
             # validate guess, if guess is invalid, decrement guess number and try again
             if not self.validator.validateWord(guess, self.length):
                 print(guess + " is not a valid guess, try again")
