@@ -9,11 +9,51 @@ import sys
 guessMap = {1: "First", 2: "Second", 3: "Third", 4: "Fourth", 5: "Fifth", 6: "Sixth"}
 
 class alphabet:
-    letters = "abcdefghijklmnopqrstuvwxyz"
-    letterMap = {c: None for c in letters}
+    def __init__(self):
+        self.letters = "abcdefghijklmnopqrstuvwxyz"
+        self.letterMap = {c: None for c in self.letters}
 
-    def updateMap(c, state):
-        letterMap[c] = state
+    def updateMap(self, c, state):
+        self.letterMap[c] = state
+
+    def get(self, c):
+        return self.letterMap[c]
+
+    def printOutput(self):
+        outputString = ""
+        for c in self.letters:
+            if self.letterMap[c] == guessState.green:
+                outputString += printColors.green + c + printColors.endc
+            elif self.letterMap[c] == guessState.yellow:
+                outputString += printColors.yellow + c + printColors.endc
+            elif self.letterMap[c] == guessState.red:
+                outputString += printColors.red + c + printColors.endc
+            else:
+                outputString += c
+        print(outputString)
+
+def validateWord(s, n):
+    if s == None:
+        return False
+    if len(s) != n:
+        return False
+    if not re.fullmatch('[a-z]+', s):
+        return False
+    d = enchant.Dict("en_US")
+    return d.check(s)
+
+class wordGenerator:
+    def __init__(self, n, t=30):
+        self.l = n
+        self.r = RandomWords()
+        self.t = t
+    
+    def generateWord(self):
+        timeout = datetime.now() + timedelta(seconds=self.t)
+        while datetime.now() < timeout:
+            s = self.r.get_random_word(hasDictionaryDef=True, minLength=self.l, maxLength=self.l)
+            if validateWord(s, self.l):
+                return s
 
 class guessState(enum.Enum):
     green = 1
@@ -26,27 +66,7 @@ class printColors:
     red = '\033[91m'
     endc = '\033[0m'
 
-def generateWord(n):
-    r = RandomWords()
-    word = r.get_random_word(hasDictionaryDef=True, minLength=n, maxLength=n)
-    return word
-
-def validateWord(s, n):
-    if s != None and len(s) != n:
-        return False
-    if not re.fullmatch('[a-z]+', s):
-        return False
-    d = enchant.Dict("en_US")
-    return d.check(s)
-
-def getValidWord(n):
-    timeout = datetime.now() + timedelta(seconds=30)
-    while datetime.now() < timeout:
-        s = generateWord(n)
-        if validateWord(s, n):
-            return s
-
-def compareLetters(word, guess, alphabetMap):
+def compareLetters(word, guess, a):
     if len(word) != len(guess):
         sys.exit("len(word) != len(guess)")
     letters = word
@@ -56,19 +76,19 @@ def compareLetters(word, guess, alphabetMap):
         if word[i] == guess[i]:
             r[i] = guessState.green
             letters = letters.replace(word[i], "", 1)
-            alphabetMap[word[i]] = guessState.green
+            a.updateMap(word[i], guessState.green)
     for i, val in enumerate(r):
         if val == None:
             if guess[i] in letters:
                 r[i] = guessState.yellow
                 letters = letters.replace(guess[i], "", 1)
-                if alphabetMap[guess[i]] != guessState.green:
-                    alphabetMap[guess[i]] = guessState.yellow
+                if a.get(guess[i]) != guessState.green:
+                    a.updateMap(guess[i], guessState.yellow)
             else:
                 r[i] = guessState.red
-                if alphabetMap[guess[i]] != guessState.green and alphabetMap[guess[i]] != guessState.yellow:
-                    alphabetMap[guess[i]] = guessState.red
-    return r, alphabetMap
+                if a.get(guess[i]) != guessState.green and a.get(guess[i]) != guessState.yellow:
+                    a.updateMap(guess[i], guessState.red)
+    return r, a
 
 def outputResult(res, s):
     if len(res) != len(s):
@@ -84,19 +104,6 @@ def outputResult(res, s):
         outputString += s[i] + printColors.endc
     return outputString
 
-def outputAlphabet(res):
-    outputString = ""
-    for c in "abcdefghijklmnopqrstuvwxyz":
-        if res[c] == guessState.green:
-            outputString += printColors.green + c + printColors.endc
-        elif res[c] == guessState.yellow:
-            outputString += printColors.yellow + c + printColors.endc
-        elif res[c] == guessState.red:
-            outputString += printColors.red + c + printColors.endc
-        else:
-            outputString += c
-    return outputString
-
 if __name__ == "__main__":
     #TODO: add hardmode
     parser = argparse.ArgumentParser()
@@ -104,24 +111,23 @@ if __name__ == "__main__":
     parser.add_argument("--maxGuesses", type=int, default=6, help="maximum number of guesses", required=False)
     args = parser.parse_args()
 
-    letters = "abcdefghijklmnopqrstuvwxyz"
-    letterMap = {c: None for c in letters}
+    a = alphabet()
+    w = wordGenerator(args.length)
 
-    word = getValidWord(args.length)
+    word = w.generateWord()
     if word == "":
         sys.exit("error generating valid word")
 
     guessNum = 0
     sharableResults = []
     while guessNum < args.maxGuesses:
-        print(outputAlphabet(letterMap))
         guessNum += 1
         guess = input(guessMap[guessNum] + " guess: ")
         if not validateWord(guess, args.length):
             print(guess + " is not a valid guess, try again")
             guessNum -= 1
             continue
-        guessRes, letterMap = compareLetters(word, guess, letterMap)
+        guessRes, a = compareLetters(word, guess, a)
         sharableResults.append(guessRes)
         print(outputResult(guessRes, guess))
 
@@ -131,5 +137,7 @@ if __name__ == "__main__":
             if share.lower() == "y":
                 print(sharableResults) #TODO: output emojis?
             sys.exit()
+        
+        a.printOutput()
 
     print("The wordle was " + word + ". Better luck next time!")
