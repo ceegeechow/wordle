@@ -13,7 +13,7 @@ class guessProcessor:
         self.wordle = wordle
         self.results = []
         self.lastGuess = ""
-        self.hardMode = hardMode # TODO: implement hard mode
+        self.hardMode = hardMode
 
     # takes guess word and compares it to the wordle (target word)
     def processGuess(self, guess):
@@ -76,6 +76,7 @@ class guessProcessor:
             outputString += s[i] + constants.printColors.endc
         print(outputString)
 
-    def shareResults(self):
-        #TODO
-        print(self.results)
+    def shareResults(self, guessNum, maxGuesses):
+        print("Camille's Wordle " + str(guessNum) + "/" + str(maxGuesses))
+        for r in self.results:
+            self.outputResult(r, "ooooo")

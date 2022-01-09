@@ -43,7 +43,7 @@ class Wordle:
                 print("Congratulations! You got the wordle in", self.guessNum, "guesses!")
                 share = input("Would you like to share your result (y/n)?")
                 if share.lower() == "y":
-                    self.processor.shareResults()
+                    self.processor.shareResults(self.guessNum, self.maxGuesses)
                 return
             
             # print color-coded alphabet to help player
