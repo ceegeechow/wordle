@@ -10,6 +10,5 @@ Clone this repository: `git clone https://github.com/ceegeechow/wordle.git`
 Run: `python3 main.py`
 
 ## **ToDos**
-- implement hard mode
 - expand to web app
-- unit tests/test exception handling
+- unit tests

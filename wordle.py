@@ -29,6 +29,10 @@ class Wordle:
                 guessRes = self.processor.processGuess(guess)
             except guesses.mismatchedLength:
                 sys.exit("error processing guess: length of guess does not match length of wordle")
+            except guesses.invalidHardMode:
+                print("this guess does not use all of the previous hints (hard mode)")
+                self.guessNum -= 1
+                continue
             
             try:
                 self.processor.outputResult(guessRes, guess)
