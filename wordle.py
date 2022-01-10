@@ -17,6 +17,7 @@ class Wordle:
             self.guessNum += 1
             # get guess from input
             guess = input("Guess #" + str(self.guessNum) + ": ")
+            guess = guess.lower()
             # validate guess, if guess is invalid, decrement guess number and try again
             if not self.validator.validateWord(guess, self.length):
                 print(guess + " is not a valid guess, try again")
