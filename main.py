@@ -1,9 +1,10 @@
-import constants
+import utils
 import sys
 import wordle
+import words
 
 if __name__ == "__main__":
-    args = constants.parseArguements()
+    args = utils.parseArguements()
 
     if args.rules:
 
