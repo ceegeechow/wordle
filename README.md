@@ -1,4 +1,4 @@
-## **Running instructions**
+## Running instructions
 
 ### Dependencies
 - python3
@@ -26,7 +26,7 @@ optional arguments:
   --hardMode HARDMODE   any revealed hints must be used in subsequent guessesmain.py [-h] [--length LENGTH] [--maxGuesses MAXGUESSES] [--hardMode HARDMODE]
   ```
 
-## **ToDos**
+## ToDos
 - better filtering of obscure words
 - expand to web app
 - unit tests
