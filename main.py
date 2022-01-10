@@ -1,15 +1,9 @@
-import argparse
+import constants
 import sys
 import wordle
-import words
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser()
-    parser.add_argument("-r", "--rules", help="display rules", action="store_true")
-    parser.add_argument("-l", "--length", type=int, default=5, help="number of letters in wordle", required=False)
-    parser.add_argument( "-mg", "--maxGuesses",type=int, default=6, help="maximum number of guesses", required=False)
-    parser.add_argument("-hm", "--hardMode", help="any revealed hints must be used in subsequent guesses", action="store_true")
-    args = parser.parse_args()
+    args = constants.parseArguements()
 
     if args.rules:
 
