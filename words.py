@@ -1,4 +1,4 @@
-import constants
+import utils
 from datetime import datetime, timedelta
 import enchant
 from random_word import RandomWords
@@ -22,12 +22,12 @@ class alphabet:
     def printOutput(self):
         outputString = ""
         for c in self.letters:
-            if self.letterMap[c] == constants.guessState.green:
-                outputString += constants.printColors.green + c + constants.printColors.endc
-            elif self.letterMap[c] == constants.guessState.yellow:
-                outputString += constants.printColors.yellow + c + constants.printColors.endc
-            elif self.letterMap[c] == constants.guessState.red:
-                outputString += constants.printColors.red + c + constants.printColors.endc
+            if self.letterMap[c] == utils.guessState.green:
+                outputString += utils.printColors.green + c + utils.printColors.endc
+            elif self.letterMap[c] == utils.guessState.yellow:
+                outputString += utils.printColors.yellow + c + utils.printColors.endc
+            elif self.letterMap[c] == utils.guessState.red:
+                outputString += utils.printColors.red + c + utils.printColors.endc
             else:
                 outputString += c
         print(outputString)

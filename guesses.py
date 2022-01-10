@@ -1,4 +1,4 @@
-import constants
+import utils
 import words
 
 class mismatchedLength(Exception):
@@ -29,20 +29,20 @@ class guessProcessor:
         
         for i in range(len(self.wordle)):
             if self.wordle[i] == guess[i]:
-                r[i] = constants.guessState.green
+                r[i] = utils.guessState.green
                 availableLetters = availableLetters.replace(self.wordle[i], "", 1)
-                self.alpha.updateMap(self.wordle[i], constants.guessState.green)
+                self.alpha.updateMap(self.wordle[i], utils.guessState.green)
         for i, val in enumerate(r):
             if val == None:
                 if guess[i] in availableLetters:
-                    r[i] = constants.guessState.yellow
+                    r[i] = utils.guessState.yellow
                     availableLetters = availableLetters.replace(guess[i], "", 1)
-                    if self.alpha.get(guess[i]) != constants.guessState.green:
-                        self.alpha.updateMap(guess[i], constants.guessState.yellow)
+                    if self.alpha.get(guess[i]) != utils.guessState.green:
+                        self.alpha.updateMap(guess[i], utils.guessState.yellow)
                 else:
-                    r[i] = constants.guessState.red
-                    if self.alpha.get(guess[i]) != constants.guessState.green and self.alpha.get(guess[i]) != constants.guessState.yellow:
-                        self.alpha.updateMap(guess[i], constants.guessState.red)
+                    r[i] = utils.guessState.red
+                    if self.alpha.get(guess[i]) != utils.guessState.green and self.alpha.get(guess[i]) != utils.guessState.yellow:
+                        self.alpha.updateMap(guess[i], utils.guessState.red)
         self.lastGuess = guess
         self.results.append(r)
         return r
@@ -55,9 +55,9 @@ class guessProcessor:
         if len(lastResult) != len(guess) or len(lastResult) != len(self.lastGuess):
             raise mismatchedLength()
         for i, c in enumerate(guess):
-            if lastResult[i] == constants.guessState.green and guess[i] != self.lastGuess[i]:
+            if lastResult[i] == utils.guessState.green and guess[i] != self.lastGuess[i]:
                 return False
-            elif lastResult[i] == constants.guessState.yellow and self.lastGuess[i] not in guess:
+            elif lastResult[i] == utils.guessState.yellow and self.lastGuess[i] not in guess:
                 return False
         return True
 
@@ -67,13 +67,13 @@ class guessProcessor:
 
         outputString = ""
         for i in range(len(s)):
-            if res[i] == constants.guessState.green:
-                outputString += constants.printColors.green
-            elif res[i] == constants.guessState.yellow:
-                outputString += constants.printColors.yellow
+            if res[i] == utils.guessState.green:
+                outputString += utils.printColors.green
+            elif res[i] == utils.guessState.yellow:
+                outputString += utils.printColors.yellow
             else:
-                outputString += constants.printColors.red
-            outputString += s[i] + constants.printColors.endc
+                outputString += utils.printColors.red
+            outputString += s[i] + utils.printColors.endc
         print(outputString)
 
     def shareResults(self, guessNum, maxGuesses):
