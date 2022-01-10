@@ -51,4 +51,5 @@ class Wordle:
             self.processor.alpha.printOutput()
 
         # out of guesses
+        print("-"*(39+len(self.wordle)))
         print("The wordle was " + self.wordle + ". Better luck next time!")
