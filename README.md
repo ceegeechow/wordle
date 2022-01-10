@@ -16,17 +16,20 @@
 ### Flags/Usage: 
 
 ```
-usage: main.py [-h] [--length LENGTH] [--maxGuesses MAXGUESSES] [--hardMode HARDMODE]
+usage: main.py [-h] [-r] [-l LENGTH] [-mg MAXGUESSES] [-hm]
 
 optional arguments:
   -h, --help            show this help message and exit
-  --length LENGTH       number of letters in wordle
-  --maxGuesses MAXGUESSES
+  -r, --rules           display rules
+  -l LENGTH, --length LENGTH
+                        number of letters in wordle
+  -mg MAXGUESSES, --maxGuesses MAXGUESSES
                         maximum number of guesses
-  --hardMode HARDMODE   any revealed hints must be used in subsequent guessesmain.py [-h] [--length LENGTH] [--maxGuesses MAXGUESSES] [--hardMode HARDMODE]
+  -hm, --hardMode       any revealed hints must be used in subsequent guesses
   ```
 
 ## ToDos
-- better filtering of obscure words
+- better filtering of obscure words/more efficient word generation
+- use virtual environment
 - expand to web app
 - unit tests
