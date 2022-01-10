@@ -79,4 +79,4 @@ class guessProcessor:
     def shareResults(self, guessNum, maxGuesses):
         print("Camille's Wordle " + str(guessNum) + "/" + str(maxGuesses))
         for r in self.results:
-            self.outputResult(r, "ooooo")
+            self.outputResult(r, "o"*len(self.wordle))
