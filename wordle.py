@@ -10,9 +10,11 @@ class Wordle:
         self.validator = words.wordValidator()
         w = words.wordGenerator(self.length)
         self.wordle = w.generateWord() # word player is trying to guess
-        self.processor = guesses.guessProcessor(self.wordle, hardMode) # processes player guesses
+        self.hardMode = hardMode
+        self.processor = guesses.guessProcessor(self.wordle, self.hardMode) # processes player guesses
 
     def play(self):
+        found = False
         while self.guessNum < self.maxGuesses:
             self.guessNum += 1
             # get guess from input
@@ -41,15 +43,22 @@ class Wordle:
 
             # if the player guesses the word, end the game
             if guess == self.wordle:
+                found = True
                 print("Congratulations! You got the wordle in", self.guessNum, "guesses!")
                 share = input("Would you like to share your result (y/n)?")
                 if share.lower() == "y":
                     self.processor.shareResults(self.guessNum, self.maxGuesses)
-                return
-            
+                break
             # print color-coded alphabet to help player
             self.processor.alpha.printOutput()
 
         # out of guesses
-        print("-"*(39+len(self.wordle)))
-        print("The wordle was " + self.wordle + ". Better luck next time!")
+        if not found:
+            print("-"*(39+len(self.wordle)))
+            print("The wordle was " + self.wordle + ". Better luck next time!")
+
+        # play again?
+        again = input("Play again (y/n)?")
+        if again.lower() == "y":
+            self.__init__(self.maxGuesses, self.length, self.hardMode)
+            self.play()
