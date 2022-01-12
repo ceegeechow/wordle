@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "wordle"
+version = "0.1.0"
+description = "Wordle clone"
+authors = ["Camille Chow"]
+
+[tool.poetry.dependencies]
+python = "^3.9"
+Random-Word = "^1.0.7"
+pyenchant = "^3.2.2"
+PyYAML = "^6.0"
+
+[tool.poetry.dev-dependencies]
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
