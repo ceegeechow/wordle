@@ -1,17 +1,31 @@
 ## Running instructions
 
 ### Dependencies
-- python3
-- enchant: https://pypi.org/project/pyenchant/
-- random_word: https://pypi.org/project/Random-Word/
+- Python **3.9 or greater**
+- This project uses python binding to **Enchant** for spell checking. For the python bindings to 
+work it must be able to find the Enchant C library. **You must install this yourself**.
+Instructions for your system can be found [here](http://pyenchant.github.io/pyenchant/install.html#installing-the-enchant-c-library).
+- [Poetry](https://python-poetry.org) is used for dependency and virtual environment management. If you would
+prefer not to use Poetry, you can install dependencies listed in `pyproject.toml` manually.
+No guaranty can be made that this will work.
 
 ### Run Steps
 
-- `git clone https://github.com/ceegeechow/wordle.git`
+Clone this repository and navigate inside it.
+```shell
+git clone https://github.com/ceegeechow/wordle.git
+cd wordle
+```
 
-- `cd wordle`
+Install dependencies with Poetry
+```shell
+poetry install
+```
 
-- `python3 main.py`
+Run inside virtual environment
+```shell
+poetry run python main.py
+```
 
 ### Flags/Usage: 
 
