@@ -24,7 +24,7 @@ poetry install
 
 Run inside virtual environment
 ```shell
-poetry run python main.py
+poetry run python src/main.py
 ```
 
 ### Flags/Usage: 
@@ -44,6 +44,5 @@ optional arguments:
 
 ## ToDos
 - better filtering of obscure words/more efficient word generation
-- use virtual environment
 - expand to web app
 - unit tests
