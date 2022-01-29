@@ -9,6 +9,7 @@ python = "^3.9"
 Random-Word = "^1.0.7"
 pyenchant = "^3.2.2"
 PyYAML = "^6.0"
+Flask = "^2.0.2"
 
 [tool.poetry.dev-dependencies]
 
