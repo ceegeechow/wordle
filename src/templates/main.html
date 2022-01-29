@@ -1,0 +1,17 @@
+<html>
+	<body>
+		<table>
+            {%for row in guessMap%}
+            <tr>
+                {%for item in row%}
+                <td>{{item}}</td>
+                {%endfor%}
+            </tr>
+            {%endfor%}
+        </table>
+        <form action="/calculate" method="post">
+            <input name="guess" placeholder="Guess #{{guessNum}}">
+            <input type="submit" value="Submit">
+        </form>
+	</body>
+</html>

@@ -13,7 +13,7 @@ class Wordle:
         self.hardMode = hardMode
         self.processor = guesses.guessProcessor(self.wordle, self.hardMode) # processes player guesses
 
-    def play(self):
+    def playCLI(self):
         found = False
         while self.guessNum < self.maxGuesses:
             self.guessNum += 1
@@ -61,4 +61,4 @@ class Wordle:
         again = input("Play again (y/n)?")
         if again.lower() == "y":
             self.__init__(self.maxGuesses, self.length, self.hardMode)
-            self.play()
+            self.playCLI()

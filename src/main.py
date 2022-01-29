@@ -20,4 +20,4 @@ if __name__ == "__main__":
         w = wordle.Wordle(args.maxGuesses, args.length, args.hardMode)
     except words.generatorTimeout:
         sys.exit("error generating wordle")
-    w.play()
+    w.playCLI()
