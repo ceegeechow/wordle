@@ -29,7 +29,7 @@ def calculate():
     
     # validate guess, if guess is invalid, decrement guess number and try again
     if not w.validator.validateWord(guess, w.length):
-        w.guessNum -= 1
+        #w.guessNum -= 1
         return "<p>invalid guess.</p>"
 
     # process guess
@@ -39,15 +39,15 @@ def calculate():
     except guesses.mismatchedLength:
         return "<p>error processing guess: length of guess does not match length of wordle.</p>"
     except guesses.invalidHardMode:
-        w.guessNum -= 1
+        #w.guessNum -= 1
         return "<p>error processing guess: length of guess does not match length of wordle.</p>"
 
     # win logic
     if guess == w.wordle:
-        return "<p>Congrats! You got the wordle :)</p>"
+        return render_template("won.html")
     # lose logic
     elif w.guessNum > w.maxGuesses:
-        return "<p>Out of guesses :(</p>"
+        return render_template("lost.html", word=w.wordle)
 
     return render_template("main.html", guessMap=w.processor.results, guessNum=str(w.guessNum))
 
