@@ -1,10 +1,11 @@
 <html>
 	<body>
 		<table>
-            {%for row in guessMap%}
+            {%for guess in guessMap%}
             <tr>
-                {%for item in row%}
-                <td>{{item}}</td>
+                <td>{{guess[0]}}:</td>
+                {%for result in guess[1]%}
+                <td>{{result}}</td>
                 {%endfor%}
             </tr>
             {%endfor%}

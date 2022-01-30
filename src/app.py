@@ -9,8 +9,6 @@ import sys
 app = Flask(__name__)
 
 @app.route("/")
-# def example():
-#     return render_template('example.html', name='Camille')
 def root():
     global w
     try:
@@ -22,16 +20,31 @@ def root():
 
 @app.route('/calculate', methods = ["POST"])
 def calculate():
+    # get guess from input
     data = request.form
-    guess = data["guess"]
-    # process guess and output result
+    guess = str(data["guess"]).lower()
+    
+    # validate guess, if guess is invalid, decrement guess number and try again
+    if not w.validator.validateWord(guess, w.length):
+        w.guessNum -= 1
+        return "<p>invalid guess.</p>"
+
+    # process guess
     try:
+        w.guessNum += 1
         w.processor.processGuess(guess)
     except guesses.mismatchedLength:
         return "<p>error processing guess: length of guess does not match length of wordle.</p>"
     except guesses.invalidHardMode:
         w.guessNum -= 1
         return "<p>error processing guess: length of guess does not match length of wordle.</p>"
+
+    # win logic
+    if guess == w.wordle:
+        return "<p>Congrats! You got the wordle :)</p>"
+    # lose logic
+    elif w.guessNum > w.maxGuesses:
+        return "<p>Out of guesses :(</p>"
 
     return render_template("main.html", guessMap=w.processor.results, guessNum=str(w.guessNum))
 

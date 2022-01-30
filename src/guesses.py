@@ -12,7 +12,6 @@ class guessProcessor:
         self.alpha = words.alphabet()
         self.wordle = wordle
         self.results = []
-        self.lastGuess = ""
         self.hardMode = hardMode
 
     # takes guess word and compares it to the wordle (target word)
@@ -43,21 +42,20 @@ class guessProcessor:
                     r[i] = utils.guessState.red
                     if self.alpha.get(guess[i]) != utils.guessState.green and self.alpha.get(guess[i]) != utils.guessState.yellow:
                         self.alpha.updateMap(guess[i], utils.guessState.red)
-        self.lastGuess = guess
-        self.results.append(r)
+        self.results.append((guess, r))
         return r
 
     # in hard mode, the guess should include revealed letters
     def checkPriorGuesses(self, guess):
-        if len(self.results) == 0 or self.lastGuess == "":
+        if len(self.results) == 0:
             return True
-        lastResult = self.results[-1]
-        if len(lastResult) != len(guess) or len(lastResult) != len(self.lastGuess):
+        lastGuess, lastResult = self.results[-1]
+        if len(lastResult) != len(guess) or len(lastResult) != len(lastGuess):
             raise mismatchedLength()
         for i, c in enumerate(guess):
-            if lastResult[i] == utils.guessState.green and guess[i] != self.lastGuess[i]:
+            if lastResult[i] == utils.guessState.green and guess[i] != lastGuess[i]:
                 return False
-            elif lastResult[i] == utils.guessState.yellow and self.lastGuess[i] not in guess:
+            elif lastResult[i] == utils.guessState.yellow and lastGuess[i] not in guess:
                 return False
         return True
 
@@ -78,5 +76,5 @@ class guessProcessor:
 
     def shareResults(self, guessNum, maxGuesses):
         print("Camille's Wordle " + str(guessNum) + "/" + str(maxGuesses))
-        for r in self.results:
+        for _, r in self.results:
             self.outputResult(r, "o"*len(self.wordle))
