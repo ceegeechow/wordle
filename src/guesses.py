@@ -1,12 +1,6 @@
 import utils
 import words
 
-class mismatchedLength(Exception):
-    pass
-
-class invalidHardMode(Exception):
-    pass
-
 class guessProcessor:
     def __init__(self, wordle, hardMode):
         self.alpha = words.alphabet()
@@ -17,10 +11,10 @@ class guessProcessor:
     # takes guess word and compares it to the wordle (target word)
     def processGuess(self, guess):
         if len(self.wordle) != len(guess):
-            raise mismatchedLength()
+            raise utils.mismatchedLength()
 
         if self.hardMode and not self.checkPriorGuesses(guess):
-            raise invalidHardMode()
+            raise utils.invalidHardMode()
 
         r = [None]*len(self.wordle)
 
@@ -51,7 +45,7 @@ class guessProcessor:
             return True
         lastGuess, lastResult = self.results[-1]
         if len(lastResult) != len(guess) or len(lastResult) != len(lastGuess):
-            raise mismatchedLength()
+            raise utils.mismatchedLength()
         for i, c in enumerate(guess):
             if lastResult[i] == utils.guessState.green and guess[i] != lastGuess[i]:
                 return False
@@ -61,7 +55,7 @@ class guessProcessor:
 
     def outputResult(self, res, s):
         if len(res) != len(s):
-            raise mismatchedLength()
+            raise utils.mismatchedLength()
 
         outputString = ""
         for i in range(len(s)):

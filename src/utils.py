@@ -14,6 +14,17 @@ class printColors:
     red = '\033[91m'
     endc = '\033[0m'
 
+# exceptions
+class mismatchedLength(Exception):
+    pass
+
+class invalidHardMode(Exception):
+    pass
+
+class generatorTimeout(Exception):
+    pass
+
+# argument parsing
 def check_range(arg):
     try:
         value = int(arg)

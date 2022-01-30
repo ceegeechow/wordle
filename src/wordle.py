@@ -1,4 +1,5 @@
 import guesses
+import utils
 import words
 import sys
 
@@ -29,16 +30,16 @@ class Wordle:
             # process guess and output result
             try:
                 guessRes = self.processor.processGuess(guess)
-            except guesses.mismatchedLength:
+            except utils.mismatchedLength:
                 sys.exit("error processing guess: length of guess does not match length of wordle")
-            except guesses.invalidHardMode:
+            except utils.invalidHardMode:
                 print("this guess does not use all of the previous hints (hard mode)")
                 self.guessNum -= 1
                 continue
             
             try:
                 self.processor.outputResult(guessRes, guess)
-            except guesses.mismatchedLength:
+            except utils.mismatchedLength:
                 sys.exit("error printing output: length of guess does not match length of result")
 
             # if the player guesses the word, end the game

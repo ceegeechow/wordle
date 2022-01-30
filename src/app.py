@@ -1,9 +1,6 @@
-from platform import java_ver
 from flask import Flask, render_template, request
-import guesses
 import utils
 import wordle
-import words
 
 app = Flask(__name__)
 
@@ -16,7 +13,7 @@ def root():
     global w
     try:
         w = wordle.Wordle(6, 5, False)
-    except words.generatorTimeout:
+    except utils.generatorTimeout:
         return "<p>Failed to generate word! Refresh the page.</p>"
     w.guessNum = 1
     return render_template("main.html", guessMap=w.processor.results, guessNum=str(w.guessNum))
@@ -35,10 +32,10 @@ def calculate():
     # process guess
     try:
         w.processor.processGuess(guess)
-    except guesses.mismatchedLength:
+    except utils.mismatchedLength:
         return render_template("main.html", guessMap=w.processor.results, guessNum=str(w.guessNum),
             invalidGuess=True, errorMessage="incorrect word length, try again")
-    except guesses.invalidHardMode:
+    except utils.invalidHardMode:
         return render_template("main.html", guessMap=w.processor.results, guessNum=str(w.guessNum),
             invalidGuess=True, errorMessage="invalid guess (hard mode), try again")
 
