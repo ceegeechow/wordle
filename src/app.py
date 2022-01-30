@@ -21,7 +21,7 @@ def root():
     w.guessNum = 1
     return render_template("main.html", guessMap=w.processor.results, guessNum=str(w.guessNum))
 
-@app.route('/calculate', methods = ["POST"])
+@app.route('/', methods = ["POST"])
 def calculate():
     # get guess from input
     data = request.form
@@ -29,19 +29,20 @@ def calculate():
     
     # validate guess, if guess is invalid, decrement guess number and try again
     if not w.validator.validateWord(guess, w.length):
-        #w.guessNum -= 1
-        return "<p>invalid guess.</p>"
+        return render_template("main.html", guessMap=w.processor.results, guessNum=str(w.guessNum),
+            invalidGuess=True, errorMessage="invalid word, try again")
 
     # process guess
     try:
-        w.guessNum += 1
         w.processor.processGuess(guess)
     except guesses.mismatchedLength:
-        return "<p>error processing guess: length of guess does not match length of wordle.</p>"
+        return render_template("main.html", guessMap=w.processor.results, guessNum=str(w.guessNum),
+            invalidGuess=True, errorMessage="incorrect word length, try again")
     except guesses.invalidHardMode:
-        #w.guessNum -= 1
-        return "<p>error processing guess: length of guess does not match length of wordle.</p>"
+        return render_template("main.html", guessMap=w.processor.results, guessNum=str(w.guessNum),
+            invalidGuess=True, errorMessage="invalid guess (hard mode), try again")
 
+    w.guessNum += 1
     # win logic
     if guess == w.wordle:
         return render_template("won.html")

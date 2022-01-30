@@ -4,21 +4,26 @@
             {%for guess in guessMap%}
             <tr>
                 <td>Guess #{{loop.index}}:</td>
-                {%for result in guess[1]%}
+                {% for result in guess[1] %}
                 <td>
                     {% if result == guessState.green %}
                         <font color="green">{{guess[0][loop.index-1]}}</font>
                     {% elif result == guessState.yellow %}
                         <font color="orange">{{guess[0][loop.index-1]}}</font>
                     {% elif result == guessState.red %}
-                        <font color="red">{{guess[0][loop.index-1]}}</font>
+                        <font color="grey">{{guess[0][loop.index-1]}}</font>
                     {% endif %}
                 </td>
-                {%endfor%}
+                {% endfor %}
             </tr>
             {%endfor%}
+            <tr>
+                {% if invalidGuess %}
+                    <font color="red">{{errorMessage}}</font>
+                {% endif %}
+            </tr>
         </table>
-        <form action="/calculate" method="post">
+        <form action="/" method="post">
             <input name="guess" placeholder="Guess #{{guessNum}}">
             <input type="submit" value="Submit">
         </form>
