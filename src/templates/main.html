@@ -3,9 +3,17 @@
 		<table>
             {%for guess in guessMap%}
             <tr>
-                <td>{{guess[0]}}:</td>
+                <td>Guess #{{loop.index}}:</td>
                 {%for result in guess[1]%}
-                <td>{{result}}</td>
+                <td>
+                    {% if result == guessState.green %}
+                        <font color="green">{{guess[0][loop.index-1]}}</font>
+                    {% elif result == guessState.yellow %}
+                        <font color="orange">{{guess[0][loop.index-1]}}</font>
+                    {% elif result == guessState.red %}
+                        <font color="red">{{guess[0][loop.index-1]}}</font>
+                    {% endif %}
+                </td>
                 {%endfor%}
             </tr>
             {%endfor%}

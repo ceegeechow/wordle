@@ -1,12 +1,15 @@
 from platform import java_ver
 from flask import Flask, render_template, request
 import guesses
+import utils
 import wordle
 import words
-import sys
-
 
 app = Flask(__name__)
+
+@app.context_processor
+def injectContext():
+    return dict(guessState=utils.guessState)
 
 @app.route("/")
 def root():
